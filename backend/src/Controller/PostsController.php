@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Posts;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PostsController extends AbstractController
 {
-    #[Route('/posts', name: 'posts')]
-    public function index(): Response
+    public function list(): Response
     {
+        $posts = $this->getDoctrine()->getRepository(Posts::class)->findAll();
+        
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PostsController.php',
+            'success' => true,
+            'posts' => $posts,
         ]);
     }
 }
