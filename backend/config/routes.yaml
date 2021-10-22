@@ -1,4 +1,9 @@
-index:
+postsList:
     path: /
     controller: App\Controller\PostsController::list
     methods: get
+
+postCreate:
+    path: /
+    controller: App\Controller\PostsController::add
+    methods: post
