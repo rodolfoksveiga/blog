@@ -20,20 +20,18 @@ class PostsController extends AbstractController
             return $this->json(['success' => false], 404);
         }
 
-        return $this->json([
-            'success' => true,
-            'posts' => $posts,
-        ]);
+        return $this->json(['success' => true, 'posts' => $posts], 201);
     }
 
     public function add(Request $request, ValidatorInterface $validator): Response
     {
+        $data = json_decode($request->getContent(), true);
         $post = (new Posts())
             ->setModifiedAt(new DateTime('now'))
-            ->setTitle($request->request->get('title'))
-            ->setBody($request->request->get('body'));
+            ->setTitle($data['title'])
+            ->setBody($data['body']);
+        
         $error = $validator->validate($post);
-
         if (count($error) > 0) {
             $errorMessages = [];
 
@@ -49,8 +47,7 @@ class PostsController extends AbstractController
         $em->flush();
 
         if ($post->getId()) {
-            return $this->json(['success' => true, 'post' => $post], 201);
+            return $this->json(['success' => true, 'post' => $data], 201);
         }
-
     }
 }
