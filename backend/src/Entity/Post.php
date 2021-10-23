@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\PostsRepository;
+use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=PostsRepository::class)
+ * @ORM\Entity(repositoryClass=PostRepository::class)
  */
-class Posts
+class Post
 {
     /**
      * @ORM\Id
@@ -39,7 +39,7 @@ class Posts
     private $body;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Comments::class, mappedBy="postId")
+     * @ORM\ManyToMany(targetEntity=Comment::class, mappedBy="postId")
      */
     private $comments;
 
@@ -90,14 +90,14 @@ class Posts
     }
 
     /**
-     * @return Collection|Comments[]
+     * @return Collection|Comment[]
      */
-    public function getComments(): Collection
+    public function getComment(): Collection
     {
         return $this->comments;
     }
 
-    public function addComment(Comments $comment): self
+    public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
@@ -107,7 +107,7 @@ class Posts
         return $this;
     }
 
-    public function removeComment(Comments $comment): self
+    public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             $comment->removePostId($this);

@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentsRepository;
+use App\Repository\CommentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CommentsRepository::class)
+ * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
-class Comments
+class Comment
 {
     /**
      * @ORM\Id
@@ -25,7 +25,7 @@ class Comments
     private $modifiedAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Posts::class, inversedBy="comments")
+     * @ORM\ManyToMany(targetEntity=Post::class, inversedBy="comments")
      */
     private $postId;
 
@@ -52,14 +52,14 @@ class Comments
     }
 
     /**
-     * @return Collection|Posts[]
+     * @return Collection|Post[]
      */
     public function getPostId(): Collection
     {
         return $this->postId;
     }
 
-    public function addPostId(Posts $postId): self
+    public function addPostId(Post $postId): self
     {
         if (!$this->postId->contains($postId)) {
             $this->postId[] = $postId;
@@ -68,7 +68,7 @@ class Comments
         return $this;
     }
 
-    public function removePostId(Posts $postId): self
+    public function removePostId(Post $postId): self
     {
         $this->postId->removeElement($postId);
 

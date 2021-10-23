@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Posts;
+use App\Entity\Post;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PostsController extends AbstractController
+class PostController extends AbstractController
 {
     public function list(): Response
     {
-        $posts = $this->getDoctrine()->getRepository(Posts::class)->findAll();
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findAll();
         
         if (!$posts) {
             return $this->json(['success' => false], 404);
@@ -26,7 +26,7 @@ class PostsController extends AbstractController
     public function add(Request $request, ValidatorInterface $validator): Response
     {
         $data = json_decode($request->getContent(), true);
-        $post = (new Posts())
+        $post = (new Post())
             ->setModifiedAt(new DateTime('now'))
             ->setTitle($data['title'])
             ->setBody($data['body']);
