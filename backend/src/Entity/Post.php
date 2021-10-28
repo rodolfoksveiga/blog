@@ -10,7 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
+ * @ApiResource(itemOperations={
+ *         "get"={"controller"="PostController"},
+ *         "put"={"controller"="PostController"},
+ *         "delete"={"controller"="PostController"},
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
 class Post implements \JsonSerializable
