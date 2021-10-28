@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
-class Comment
+class Comment implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -28,6 +28,14 @@ class Comment
      * @ORM\ManyToMany(targetEntity=Post::class, inversedBy="comments")
      */
     private $postId;
+
+    public function jsonSerialize()
+    {
+        return [
+            'modifiedAt' => $this->modifiedAt,
+            'postId' => $this->postId
+        ];
+    }
 
     public function __construct()
     {
@@ -51,9 +59,6 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return Collection|Post[]
-     */
     public function getPostId(): Collection
     {
         return $this->postId;

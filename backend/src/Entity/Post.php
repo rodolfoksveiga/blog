@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
-class Post
+class Post implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -42,6 +42,16 @@ class Post
      * @ORM\ManyToMany(targetEntity=Comment::class, mappedBy="postId")
      */
     private $comments;
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'modifiedAt' => $this->modifiedAt,
+            'title' => $this->title,
+            'body' => $this->body
+        ];
+    }
 
     public function __construct()
     {
@@ -89,9 +99,6 @@ class Post
         return $this;
     }
 
-    /**
-     * @return Collection|Comment[]
-     */
     public function getComment(): Collection
     {
         return $this->comments;

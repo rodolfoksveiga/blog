@@ -14,13 +14,16 @@ class PostController extends AbstractController
 {
     public function list(): Response
     {
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findAll();
+        $posts = $this
+            ->getDoctrine()
+            ->getRepository(Post::class)
+            ->findAll();
         
         if (!$posts) {
             return $this->json(['success' => false], 404);
         }
 
-        return $this->json(['success' => true, 'posts' => $posts], 201);
+        return $this->json(['posts' => $posts], 201);
     }
 
     public function add(Request $request, ValidatorInterface $validator): Response
