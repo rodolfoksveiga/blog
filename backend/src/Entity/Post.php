@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,14 +39,14 @@ class Post implements \JsonSerializable
     private $body;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Comment::class, mappedBy="postId")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="postId", orphanRemoval=true)
      */
     private $comments;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Comentario::class, mappedBy="postId")
-     */
-    private $comentarios;
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function jsonSerialize()
     {
@@ -93,6 +95,36 @@ class Post implements \JsonSerializable
     public function setBody(string $body): self
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setPostId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getPostId() === $this) {
+                $comment->setPostId(null);
+            }
+        }
 
         return $this;
     }
