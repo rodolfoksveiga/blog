@@ -22,3 +22,18 @@ postDelete:
     path: /posts/{id}
     controller: App\Controller\PostController::delete
     methods: delete
+
+commentsList:
+    path: /comments
+    controller: App\Controller\CommentController::list
+    methods: get
+
+commentDetails:
+    path: /comments/{id}
+    controller: App\Controller\CommentController::details
+    methods: get
+
+commentCreate:
+    path: /comments
+    controller: App\Controller\CommentController::create
+    methods: post

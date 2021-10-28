@@ -29,7 +29,28 @@ class CommentController extends AbstractController
         return $this->json(['success' => true, 'comments' => $comments], 201);
     }
 
-    public function add(Request $request, ValidatorInterface $validator): Response
+    public function details(int $id): Response
+    {
+        $comment = $this
+            ->getDoctrine()
+            ->getRepository(Comment::class)
+            ->find($id);
+        
+        if (!$comment) {
+            return $this->json([
+                'success' => false,
+                'error' => 'No comment found for id ' . $id . '.'
+            ], 404);
+        }
+
+        return $this->json([
+            'success' => true,
+            'comment' => $comment,
+            'links' => '/comments/' . $id
+        ], 201);
+    }
+
+    public function create(Request $request, ValidatorInterface $validator): Response
     {
         $data = json_decode($request->getContent(), true);
         $comment = (new Comment())
@@ -52,8 +73,13 @@ class CommentController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        if ($comment->getId()) {
-            return $this->json(['success' => true, 'comment' => $data], 201);
+        $id = $comment->getId();
+        if ($id) {
+            return $this->json([
+                'success' => true,
+                'comment' => $data,
+                'links' => '/comments/' . $id
+            ], 201);
         }
     }
 }

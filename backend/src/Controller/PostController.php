@@ -77,8 +77,13 @@ class PostController extends AbstractController
         $em->persist($post);
         $em->flush();
 
-        if ($post->getId()) {
-            return $this->json(['success' => true, 'post' => $data], 201);
+        $id = $post->getId();
+        if ($id) {
+            return $this->json([
+                'success' => true,
+                'post' => $data,
+                'links' => '/posts/' . $id
+            ], 201);
         }
     }
     
@@ -92,7 +97,7 @@ class PostController extends AbstractController
         if (!$post) {
             return $this->json([
                 'success' => false,
-                'error' => 'No post found for id ' . $id
+                'error' => 'No post found for id ' . $id . '.'
             ], 404);
         }
         
