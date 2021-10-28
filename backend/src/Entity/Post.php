@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -43,6 +41,11 @@ class Post implements \JsonSerializable
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comentario::class, mappedBy="postId")
+     */
+    private $comentarios;
+
     public function jsonSerialize()
     {
         return [
@@ -51,11 +54,6 @@ class Post implements \JsonSerializable
             'title' => $this->title,
             'body' => $this->body
         ];
-    }
-
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,30 +93,6 @@ class Post implements \JsonSerializable
     public function setBody(string $body): self
     {
         $this->body = $body;
-
-        return $this;
-    }
-
-    public function getComment(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->addPostId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            $comment->removePostId($this);
-        }
 
         return $this;
     }
