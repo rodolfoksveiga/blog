@@ -1,9 +1,24 @@
 postsList:
-    path: /
+    path: /posts
     controller: App\Controller\PostController::list
     methods: get
 
+postDetails:
+    path: /posts/{id}
+    controller: App\Controller\PostController::details
+    methods: get
+
 postCreate:
-    path: /
-    controller: App\Controller\PostController::add
+    path: /posts
+    controller: App\Controller\PostController::create
     methods: post
+
+postUpdate:
+    path: /posts/{id}
+    controller: App\Controller\PostController::update
+    methods: put
+
+postDelete:
+    path: /posts/{id}
+    controller: App\Controller\PostController::delete
+    methods: delete

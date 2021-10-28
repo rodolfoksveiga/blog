@@ -20,13 +20,41 @@ class PostController extends AbstractController
             ->findAll();
         
         if (!$posts) {
-            return $this->json(['success' => false], 404);
+            return $this->json([
+                'success' => false,
+                'error' => 'There is no posts in Post table.'
+            ], 404);
         }
 
-        return $this->json(['posts' => $posts], 201);
+        return $this->json([
+            'success' => true,
+            'posts' => $posts,
+            'links' => '/posts'
+        ], 201);
     }
 
-    public function add(Request $request, ValidatorInterface $validator): Response
+    public function details(int $id): Response
+    {
+        $post = $this
+            ->getDoctrine()
+            ->getRepository(Post::class)
+            ->find($id);
+        
+        if (!$post) {
+            return $this->json([
+                'success' => false,
+                'error' => 'No post found for id ' . $id
+            ], 404);
+        }
+
+        return $this->json([
+            'success' => true,
+            'post' => $post,
+            'links' => '/posts/' . $id
+        ], 201);
+    }
+
+    public function create(Request $request, ValidatorInterface $validator): Response
     {
         $data = json_decode($request->getContent(), true);
         $post = (new Post())
@@ -52,5 +80,60 @@ class PostController extends AbstractController
         if ($post->getId()) {
             return $this->json(['success' => true, 'post' => $data], 201);
         }
+    }
+    
+    public function update(int $id, Request $request): Response
+    {
+        $post = $this
+            ->getDoctrine()
+            ->getRepository(Post::class)
+            ->find($id);
+
+        if (!$post) {
+            return $this->json([
+                'success' => false,
+                'error' => 'No post found for id ' . $id
+            ], 404);
+        }
+        
+        $data = json_decode($request->getContent(), true);
+
+        $post = $post
+            ->setModifiedAt(new DateTime('now'))
+            ->setTitle($data['title'])
+            ->setBody($data['body']);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($post);
+        $em->flush();
+
+        return $this->json([
+            'success' => true,
+            'post' => $post,
+            'links' => '/posts/' . $id
+        ]);
+    }
+
+    public function delete(int $id): Response
+    {
+        $post = $this
+            ->getDoctrine()
+            ->getRepository(Post::class)
+            ->find($id);
+
+        if (!$post) {
+            return $this->json([
+                'success' => false,
+                'error' => 'No post found for id ' . $id
+            ], 404);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($post);
+        $em->flush();
+
+        return $this->json([
+            'success' => true
+        ]);
     }
 }
