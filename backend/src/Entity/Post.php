@@ -113,26 +113,4 @@ class Post implements \JsonSerializable
     {
         return $this->comments;
     }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setPostId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getPostId() === $this) {
-                $comment->setPostId(null);
-            }
-        }
-
-        return $this;
-    }
 }

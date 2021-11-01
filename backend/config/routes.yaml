@@ -37,3 +37,13 @@ commentCreate:
     path: /comments
     controller: App\Controller\CommentController::create
     methods: post
+
+commentUpdate:
+    path: /comments/{id}
+    controller: App\Controller\CommentController::update
+    methods: put
+
+commentDelete:
+    path: /comments/{id}
+    controller: App\Controller\CommentController::delete
+    methods: delete

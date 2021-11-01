@@ -6,6 +6,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(itemOperations={
@@ -37,12 +38,8 @@ class Comment
     private $postId;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
-
-    /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank
      */
     private $body;
 
@@ -71,18 +68,6 @@ class Comment
     public function setPostId(?Post $postId): self
     {
         $this->postId = $postId;
-
-        return $this;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
 
         return $this;
     }

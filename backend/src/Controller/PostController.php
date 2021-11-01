@@ -43,7 +43,7 @@ class PostController extends AbstractController
         if (!$post) {
             return $this->json([
                 'success' => false,
-                'error' => 'No post found for id ' . $id
+                'error' => 'No post found for id ' . $id . '.'
             ], 404);
         }
 
@@ -87,7 +87,7 @@ class PostController extends AbstractController
         }
     }
     
-    public function update(int $id, Request $request): Response
+    public function update(int $id, Request $request, ValidatorInterface $validator): Response
     {
         $post = $this
             ->getDoctrine()
@@ -107,6 +107,17 @@ class PostController extends AbstractController
             ->setModifiedAt(new DateTime('now'))
             ->setTitle($data['title'])
             ->setBody($data['body']);
+
+        $error = $validator->validate($post);
+        if (count($error) > 0) {
+            $errorMessages = [];
+
+            /** @var Constraint $violantion */
+            foreach($error as $violation) {
+                $errorMessages[] = $violation->getPropertyPath() . ": " . $violation->getMessage();
+            }
+            return $this->json(['success' => false, 'error' => $errorMessages], 400);
+        }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($post);
@@ -129,7 +140,7 @@ class PostController extends AbstractController
         if (!$post) {
             return $this->json([
                 'success' => false,
-                'error' => 'No post found for id ' . $id
+                'error' => 'No post found for id ' . $id . '.'
             ], 404);
         }
 
