@@ -2,8 +2,5 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": ["prettier", "react"],
-  "extends": ["prettier", "eslint:recommended", "plugin:react/recommended"],
-  "rules": {
-    "prettier/prettier": "error"
-  }
+  "extends": ["prettier", "eslint:recommended", "plugin:react/recommended"]
 }
